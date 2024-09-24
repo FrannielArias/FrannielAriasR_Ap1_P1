@@ -1,0 +1,56 @@
+﻿@page "/Registro/Index"
+@rendermode InteractiveServer
+@inject NavigationManager navigationManager
+
+<PageTitle>Registro Index</PageTitle>
+<div class="container">
+    <div class="card shadow-lg">
+        @*Header*@
+        <div class="card-header">
+            <h5 class="card-title">Registro</h5>
+        </div>
+        @*Body*@
+        <div class="card-body">
+            @*Crear*@
+            <a href="Registro/Create" class="btn btn-primary">
+                <span class="bi bi-plus-square-fill mt-3"></span> Crear
+            </a>
+            @*Tabla*@
+            <table class="table table-bordered text-center mt-4">
+                <thead class="table table-striped">
+                    <tr>
+                        <th>Observar</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var registro in )
+                    {
+                        @*Observar*@
+                        <td>
+                            <a href=""><button class="btn btn-outline-primary bi-eye"></button></a>
+                        </td>
+                        @*Editar*@
+                        <td>
+                            <a href=""><button class="btn btn-outline-success bi bi-pen"></button></a>
+                        </td>
+                        @*Eliminar*@
+                        <td>
+                            <a href=""><button class="btn btn-outline-danger bi bi-trash"></button></a>
+                        </td>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @*Footer*@
+        <div class="card-footer">
+            
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+}
