@@ -13,10 +13,10 @@
         <div class="card-body">
             @*Crear*@
             <a href="/Registro/Create" class="btn btn-primary">
-                <span class="bi bi-plus-square-fill mt-3"></span> Crear
+                <span class="bi bi-plus-square mt-3"></span> Crear
             </a>
             @*Tabla*@
-            <table class="table table-bordered text-center mt-4">
+            <table class="table table-bordered mt-4">
                 <thead class="table table-striped">
                     <tr>
                         <th>Observar</th>
@@ -25,31 +25,50 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var registro in )
-                    {
-                        @*Observar*@
-                        <td>
-                            <a href=""><button class="btn btn-outline-primary bi-eye"></button></a>
-                        </td>
-                        @*Editar*@
-                        <td>
-                            <a href=""><button class="btn btn-outline-success bi bi-pen"></button></a>
-                        </td>
-                        @*Eliminar*@
-                        <td>
-                            <a href=""><button class="btn btn-outline-danger bi bi-trash"></button></a>
-                        </td>
-                    }
+                    @*Observar*@
+                <td class="text-center">
+                    <a href="#" class="btn bi bi-eye"></a>
+                </td>
+                    @*Editar*@
+                <td class="text-center">
+                    <a href="#" class="btn bi bi-pencil"></a>
+                </td>
+                    @*Eliminar*@
+                <td class="text-center">
+                    <a href="#" class="btn bi bi-trash"></a>
+                </td>
+
+                <a href="#"
+                   class="btn btn-primary">
+                    <span class="bi bi-plus-square mt-3"></span> Crear
+                </a>
+                <td class="text-center">
+                    <a href="#" class="btn bi bi-eye"></a>
+                </td>
+                <td class="text-center">
+                    <a href="#" class="btn bi bi-pencil-square"></a>
+                </td>
+                <td class="text-center">
+                    <a href="#" class="btn bi bi-trash"></a>
+                </td>
+
+                <a href="#"
+                   class="btn btn-primary">
+                    <span class="bi bi-floppy mt-3"></span> Guardar
+                </a>
+                <a href="#"
+                   class="btn btn-primary">
+                    <span class="bi bi-arrow-left mt-3"></span> Volver
+                </a>
+
                 </tbody>
             </table>
         </div>
         @*Footer*@
         <div class="card-footer">
-            
         </div>
     </div>
 </div>
-
 
 @code {
 
