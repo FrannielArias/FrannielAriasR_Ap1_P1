@@ -2,7 +2,7 @@
 
 namespace FrannielAriasR_Ap1_P1.Models;
 
-public class Prestamo
+public class Prestamos
 {
     [Key]
     public int PrestamoId { get; set; }
