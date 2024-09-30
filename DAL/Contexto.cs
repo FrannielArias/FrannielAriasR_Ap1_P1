@@ -9,4 +9,5 @@ public class Contexto : DbContext
         : base(options){ }
 
     public DbSet<Registro> Registros { get; set; }
+
 }
