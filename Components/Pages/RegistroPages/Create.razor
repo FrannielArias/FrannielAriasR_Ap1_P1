@@ -1,6 +1,83 @@
-﻿@page "/Registro/Create"
+﻿@page "/Prestamo/Create"
+@inject PrestamosServices prestamoServices
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
 
+<PageTitle>Create Prestamos</PageTitle>
+<EditForm Model="Prestamo" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator/>
+    <div class="container">
+        <div class="shadow-lg">
+            @*Header*@
+            <div class="card-header">
+                <h5 class="card-title">Create de Prestamos</h5>
+            </div>
+            @*Body*@
+            <div class="card-body">
+                @*PrestamoId*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>PrestamoId</strong></label>
+                    <div class="id-input">
+                        <InputNumber class="form-control" @bind-Value=Prestamo.PrestamoId></InputNumber>
+                    </div>
+                </div>
+                @*Deudor*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>Deudor</strong></label>
+                    <InputText class="form-control" @bind-Value=Prestamo.Deudor></InputText>
+                    <ValidationMessage For="(() => Prestamo.Deudor)" />
+                </div>
+                @*Concepto*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>Concepto</strong></label>
+                    <InputText class="form-control" @bind-Value=Prestamo.Concepto></InputText>
+                    <ValidationMessage For="(() => Prestamo.Concepto)" />
+                </div>
+                @*Monto*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>Monto</strong></label>
+                    <InputNumber class="form-control" @bind-Value=Prestamo.Monto></InputNumber>
+                    <ValidationMessage For="(() => Prestamo.Concepto)" />
+                </div>
+
+            </div>
+            @*footer*@
+            <div class="card-footer">
+                @*Volver*@
+                <button type="button" class="btn btn-secondary" @onclick=Volver>
+                    <span class="bi bi-arrow-left mt-3"/> Volver
+                </button>
+                @*Guardar*@
+                <button type="submit" class="btn btn-primary "> 
+                    <span class="bi bi-floppy mt-3"></span> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+    @Mensaje
+</EditForm>
 
 @code {
+    public Prestamos Prestamo { get; set; } = new Prestamos();
+    public string Mensaje { get; set; } = string.Empty;
 
+    public void Volver()
+    {
+        navigationManager.NavigateTo("Prestamo/Index");
+    }
+
+    public async Task Guardar()
+    {
+        var Crear = await prestamoServices.Guardar(Prestamo);
+
+        if (Crear)
+        {
+            Mensaje = "Se a creado correctamente.";
+        }
+        else
+        {
+            Mensaje = "No se pudo crear";
+        }
+
+    }
 }
