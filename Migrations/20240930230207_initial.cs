@@ -11,7 +11,7 @@ namespace FrannielAriasR_Ap1_P1.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Registros",
+                name: "Prestamos",
                 columns: table => new
                 {
                     PrestamoId = table.Column<int>(type: "INTEGER", nullable: false)
@@ -22,7 +22,7 @@ namespace FrannielAriasR_Ap1_P1.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Registros", x => x.PrestamoId);
+                    table.PrimaryKey("PK_Prestamos", x => x.PrestamoId);
                 });
         }
 
@@ -30,7 +30,7 @@ namespace FrannielAriasR_Ap1_P1.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Registros");
+                name: "Prestamos");
         }
     }
 }

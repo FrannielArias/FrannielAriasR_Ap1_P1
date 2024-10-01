@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FrannielAriasR_Ap1_P1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20240930223028_initial")]
+    [Migration("20240930230207_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -19,7 +19,7 @@ namespace FrannielAriasR_Ap1_P1.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
 
-            modelBuilder.Entity("FrannielAriasR_Ap1_P1.Models.Prestamo", b =>
+            modelBuilder.Entity("FrannielAriasR_Ap1_P1.Models.Prestamos", b =>
                 {
                     b.Property<int>("PrestamoId")
                         .ValueGeneratedOnAdd()
@@ -38,7 +38,7 @@ namespace FrannielAriasR_Ap1_P1.Migrations
 
                     b.HasKey("PrestamoId");
 
-                    b.ToTable("Registros");
+                    b.ToTable("Prestamos");
                 });
 #pragma warning restore 612, 618
         }
