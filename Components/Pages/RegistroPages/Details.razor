@@ -1,0 +1,56 @@
+﻿@page "/Prestamo/Details/{PrestamoId:int}"
+@inject PrestamosServices prestamoServices
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Details Prestamos</PageTitle>
+<div class="container">
+    <div class="shadow-lg">
+        @*Header*@
+        <div class="card-header">
+            <h3 class="card-title">Eliminar de Prestamos</h3>
+        </div>
+        @*Body*@
+        <div class="card-body">
+            <dl class="row">
+                <h5>Detalle del Prestamo</h5>
+                @*ArticuloId*@
+                <dt class="col-sm-3">ID:</dt>
+                <dd class="col-sm-9">@Prestamo.PrestamoId</dd>
+                @*Deudor*@
+                <dt class="col-sm-3">Deudor:</dt>
+                <dd class="col-sm-9">@Prestamo.Deudor</dd>
+                @*Concepto*@
+                <dt class="col-sm-3">Concepto:</dt>
+                <dd class="col-sm-9">@Prestamo.Concepto</dd>
+                @*Monto*@
+                <dt class="col-sm-3">Monto:</dt>
+                <dt class="col-sm-9">@Prestamo.Monto</dt>
+            </dl>
+        </div>
+        <div class="card-footer">
+            @*Volver*@
+            <button type="button" class="btn btn-secondary" @onclick=Volver>
+                <span class="bi bi-arrow-left mt-3" /> Volver
+            </button>
+        </div>
+    </div>
+</div>
+@Mensaje
+
+@code {
+    [Parameter]
+    public int PrestamoId { get; set; }
+    public Prestamos Prestamo { get; set; } = new Prestamos();
+    public string Mensaje { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Prestamo = await prestamoServices.Buscar(PrestamoId);
+    }
+
+    public void Volver()
+    {
+        navigationManager.NavigateTo("Prestamo/Index");
+    }
+}
