@@ -1,5 +1,6 @@
 using FrannielAriasR_Ap1_P1.Components;
 using FrannielAriasR_Ap1_P1.DAL;
+using FrannielAriasR_Ap1_P1.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,8 @@ builder.Services.AddRazorComponents()
 
 var ConStr = builder.Configuration.GetConnectionString("ConStr");
 builder.Services.AddDbContext<Contexto>(r => r.UseSqlite(ConStr));
+
+builder.Services.AddScoped<PrestamosServices>();
 
 var app = builder.Build();
 
