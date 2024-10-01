@@ -1,75 +1,179 @@
-﻿@page "/Registro/Index"
-@rendermode InteractiveServer
+﻿@page "/Prestamo/Index"
+@inject PrestamosServices prestamoServices
 @inject NavigationManager navigationManager
+@rendermode InteractiveServer
 
-<PageTitle>Registro Index</PageTitle>
+<PageTitle>Prestamos Index</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
         @*Header*@
         <div class="card-header">
-            <h5 class="card-title">Registro</h5>
+            <h3 class="card-title">Registro de Prestamos</h3>
         </div>
         @*Body*@
         <div class="card-body">
-            @*Crear*@
-            <a href="/Registro/Create" class="btn btn-primary">
-                <span class="bi bi-plus-square mt-3"></span> Crear
-            </a>
+            <div class="row">
+                @*Filtrar por*@
+                <div class="col-3">
+                    <label class="col-form-label"><strong>Filtrar por:</strong></label>
+                </div>
+                @*ValorFiltrado*@
+                <div class="col-3">
+                    <label class="form-label"><strong>Buscar</strong></label>
+                </div>
+            </div>
+            <div class="row">
+                @*Filtro*@
+                <div class="col-3">
+                    <InputSelect class="form-select" @bind-Value="Filtro">
+                        <option value="">Elija una opci&omicron;n</option>
+                        <option value="ID">ID</option>
+                        <option value="Deudor">Deudor</option>
+                        <option value="Concepto">Concepto</option>
+                    </InputSelect>
+                </div>
+                @*Buscar*@
+                <div class="col-3">
+                    <div class="input-group">
+                        <input class="form-control" @bind="ValorFiltrado" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick=Buscar> Buscar</button>
+                    </div>
+                </div>
+                @*Restablecer*@
+                <div class="col-auto">
+                    <button type="button" class="btn btn-outline-secondary bi bi-arrow-clockwise" @onclick=Restablecer></button>
+                </div>
+                @*Crear*@
+                <div class="col-auto text-end">
+                    <a href="Prestamo/Create" class="btn btn-primary ">
+                        <span class="bi bi-plus-square mt-3"></span> Crear
+                    </a>
+                </div>
+            </div>
+            
             @*Tabla*@
-            <table class="table table-bordered mt-4">
+            <table class="table table-bordered text-center mt-4">
                 <thead class="table table-striped">
                     <tr>
+                        <th>PrestamoId</th>
+                        <th>Deudor</th>
+                        <th>Concepto</th>
+                        <th>Monto</th>
                         <th>Observar</th>
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @*Observar*@
-                <td class="text-center">
-                    <a href="#" class="btn bi bi-eye"></a>
-                </td>
-                    @*Editar*@
-                <td class="text-center">
-                    <a href="#" class="btn bi bi-pencil"></a>
-                </td>
-                    @*Eliminar*@
-                <td class="text-center">
-                    <a href="#" class="btn bi bi-trash"></a>
-                </td>
-
-                <a href="#"
-                   class="btn btn-primary">
-                    <span class="bi bi-plus-square mt-3"></span> Crear
-                </a>
-                <td class="text-center">
-                    <a href="#" class="btn bi bi-eye"></a>
-                </td>
-                <td class="text-center">
-                    <a href="#" class="btn bi bi-pencil-square"></a>
-                </td>
-                <td class="text-center">
-                    <a href="#" class="btn bi bi-trash"></a>
-                </td>
-
-                <a href="#"
-                   class="btn btn-primary">
-                    <span class="bi bi-floppy mt-3"></span> Guardar
-                </a>
-                <a href="#"
-                   class="btn btn-primary">
-                    <span class="bi bi-arrow-left mt-3"></span> Volver
-                </a>
-
+                    @foreach(var prestamo in ListarPrestamos)
+                    {
+                        <tr>
+                            <td>@prestamo.PrestamoId</td>
+                            <td>@prestamo.Deudor</td>
+                            <td>@prestamo.Concepto</td>
+                            <div class="text-end">
+                                <td>@prestamo.Monto</td>
+                            </div>
+                            @*Observar*@
+                            <td>
+                                <a href="Prestamo/Details/@prestamo.PrestamoId"
+                                   class="btn btn-outline-primary">
+                                    <span class="btn btn bi bi-eye"></span>
+                                </a>
+                            </td>
+                            @*Editar*@
+                            <td>
+                                <a href="Prestamo/Edit/@prestamo.PrestamoId"
+                                   class="btn btn-outline-warning">
+                                    <span class="btn bi bi-pencil"></span>
+                                </a>
+                            </td>
+                            @*Eliminar*@
+                            <td>
+                                <a href="Prestamo/Delete/@prestamo.PrestamoId"
+                                   class="btn btn-outline-danger">
+                                    <span class="btn bi bi-trash"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
         @*Footer*@
         <div class="card-footer">
+            <p><strong>Cantidad de prestamos: </strong>@ListarPrestamos.Count</p>
         </div>
     </div>
 </div>
 
-@code {
+@* @*Observar*@
+@* <td class="text-center">
+    <a href="#" class="btn bi bi-eye"></a>
+</td> *@
+@*Editar*@
+@* <td class="text-center">
+    <a href="#" class="btn bi bi-pencil"></a>
+</td> *@
+@*Eliminar*@
+@* <td class="text-center">
+    <a href="#" class="btn bi bi-trash"></a>
+</td> *@
 
+@* <a href="#"
+   class="btn btn-primary">
+    <span class="bi bi-plus-square mt-3"></span> Crear
+</a> *@
+@* <td class="text-center">
+    <a href="#" class="btn bi bi-eye"></a>
+</td>
+<td class="text-center">
+    <a href="#" class="btn bi bi-pencil-square"></a>
+</td>
+<td class="text-center">
+    <a href="#" class="btn bi bi-trash"></a>
+</td>
+
+<a href="#"
+   class="btn btn-primary">
+    <span class="bi bi-floppy mt-3"></span> Guardar
+</a>
+<a href="#"
+   class="btn btn-primary">
+    <span class="bi bi-arrow-left mt-3"></span> Volver
+</a>  *@
+
+@code {
+    public List<Prestamos> ListarPrestamos { get; set; } = new List<Prestamos>();
+    public string Filtro = string.Empty;
+    public string ValorFiltrado = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListarPrestamos = await prestamoServices.Listar(p => true);
+    }
+
+    public async Task Buscar()
+    {
+        if (ValorFiltrado.Trim() != "")
+        {
+            if (Filtro == "ID" && int.TryParse(ValorFiltrado, out int prestamoId))
+                ListarPrestamos = await prestamoServices.Listar(p => p.PrestamoId == prestamoId);
+            else if (Filtro == "Deudor")
+                ListarPrestamos = await prestamoServices.Listar(t => t.Deudor.ToLower().Contains(ValorFiltrado.ToLower()));
+            else if (Filtro == "Concepto")
+                ListarPrestamos = await prestamoServices.Listar(t => t.Concepto.ToLower().Contains(ValorFiltrado.ToLower()));
+        }
+        else
+        {
+            ListarPrestamos = await prestamoServices.Listar(t => true);
+        }
+    }
+
+    public async Task Restablecer()
+    {
+        ListarPrestamos = await prestamoServices.Listar(t => true);
+        Filtro = string.Empty;
+        ValorFiltrado = string.Empty;
+    }
 }
