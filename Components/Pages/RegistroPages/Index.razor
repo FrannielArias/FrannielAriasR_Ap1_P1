@@ -69,7 +69,7 @@
                     {
                         <tr>
                             <td>@prestamo.PrestamoId</td>
-                            <td>@prestamo.Deudor</td>
+                            @* <td>@prestamo.Deudor</td> *@
                             <td>@prestamo.Concepto</td>
                             <div class="text-end">
                                 <td>@prestamo.Monto</td>
@@ -123,8 +123,8 @@
         {
             if (Filtro == "ID" && int.TryParse(ValorFiltrado, out int prestamoId))
                 ListarPrestamos = await prestamoServices.Listar(p => p.PrestamoId == prestamoId);
-            else if (Filtro == "Deudor")
-                ListarPrestamos = await prestamoServices.Listar(t => t.Deudor.ToLower().Contains(ValorFiltrado.ToLower()));
+            // else if (Filtro == "Deudor")
+            //     ListarPrestamos = await prestamoServices.Listar(t => t.Deudor.ToLower().Contains(ValorFiltrado.ToLower()));
             else if (Filtro == "Concepto")
                 ListarPrestamos = await prestamoServices.Listar(t => t.Concepto.ToLower().Contains(ValorFiltrado.ToLower()));
         }
