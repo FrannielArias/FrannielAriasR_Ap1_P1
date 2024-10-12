@@ -1,0 +1,176 @@
+﻿@page "/Cobro/Create"
+@inject CobrosServices cobroServices
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Create Cobro</PageTitle>
+<EditForm Model="Cobro" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="container">
+        <div class="shadow-lg">
+            @*Header*@
+            <div class="card-header">
+                <h5 class="card-title">Crear cobro</h5>
+            </div>
+            @*body*@
+            <div class="card-body">
+                @*CobroId*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>CobroId</strong></label>
+                    <InputNumber class="form-control" readonly @bind-Value=Cobro.CobroId></InputNumber>
+                </div>
+                @*DeudorId*@
+                <div class="col-3 mt-2">
+                    <InputSelect class="form-select" @bind-Value=seleccionado>
+                        <option value="0" selected disabled>Seleccione un deudor</option>
+                        @foreach (var deudores in ListarDeudores)
+                        {
+                            <option value="@deudores.DeudorId">@deudores.Nombres</option>
+                        }
+                    </InputSelect>
+                </div>
+                @*Fecha*@
+                <div class="col-2 mt-2">
+                    <label class="form-label"><strong>Fecha</strong></label>
+                    <InputDate class="form-control" @bind-Value="Cobro.Fecha"></InputDate>
+                </div>
+                @*Monto*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>Monto</strong></label>
+                    <InputNumber class="form-control" @bind-Value=Cobro.Monto></InputNumber>
+                    <ValidationMessage For="(() => Cobro.Monto)" />
+                </div>
+                @*Detalle de Deudor*@
+                <div class="row">
+                    <div class="col-12 mt-4">
+                        <div class="card">
+                            @*Header deudores*@
+                            <div class="card-header">
+                                <h5 class="card-title">Detalle de deudores</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    @*Concepto*@
+                                    <div class="col-3 mt-2">
+                                        <label class="form-label"><strong>Concepto</strong></label>
+                                    </div>
+                                    @*ValorCobrado*@
+                                    <div class="col-3 mt-2">
+                                        <label class="form-label"><strong>Valor Cobrado</strong></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    @*Concepto*@
+                                    <div class="col-3 mt-2">
+                                        <InputSelect class="form-select" @bind-Value=seleccionado>
+                                            <option value="0" selected disabled>Seleccione un concepto de prestamo</option>
+                                            @foreach (var concepto in ListarPrestamos)
+                                            {
+                                                <option value="@concepto.PrestamoId">@concepto.Concepto</option>
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                    @*ValorCobrado*@
+                                    <div class="col-3 mt-2">
+                                        <InputNumber class="form-control" @bind-Value=valorCobrado></InputNumber>
+                                        <ValidationMessage For="(() => Cobro.CobroDetalle)" />
+                                    </div>
+                                    @*Agregar*@
+                                    <div class="col-auto text-end">
+                                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Agregar">Agregar</button>
+                                    </div>
+                                    @*Tabla*@
+                                    <table class="table table-bordered mt-4">
+                                        <thead>
+                                            <tr>
+                                                <th>PrestamoId</th>
+                                                <th>Concepto</th>
+                                                <th>Valor Cobrado</th>
+                                                <th> </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var concepto in Cobro.CobroDetalle)
+                                            {
+                                                <tr>
+                                                    <td>@concepto.PrestamoId</td>
+                                                    <td>@concepto.Prestamos</td>
+                                                    <td>@concepto.ValorCobrado</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger" @onclick="@(() => RemoverDetalle(concepto))">
+                                                            <i class="oi oi-trash">Eliminar</i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*Footer*@
+            <div class="card-footer">
+                @*Volver*@
+                <a href="Cobro/Index" class="btn btn-secondary">
+                    <span class="bi bi-arrow-left mt-3"> Volver</span>
+                </a>
+                @*Guardar*@
+                <button type="submit" class="btn btn-success bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+        @Mensaje
+    </div>
+</EditForm>
+
+@code {
+    public Cobros Cobro { get; set; } = new Cobros();
+    public CobrosDetalle cobrosDetalle { get; set; } = new CobrosDetalle();
+    public List<Deudores> ListarDeudores { get; set; } = new List<Deudores>();
+    public List<Prestamos> ListarPrestamos { get; set; } = new List<Prestamos>();
+    public string Mensaje = string.Empty;
+    public int seleccionado { get; set; }
+    public decimal valorCobrado { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListarDeudores = await cobroServices.ListarDeudores(c => true);
+    }
+
+    public async Task Guardar()
+    {
+        var Crear = await cobroServices.Guardar(Cobro);
+
+        if (Crear)
+        {
+            Mensaje = "Se a creado correctamente.";
+        }
+        else
+        {
+            Mensaje = "No se pudo crear";
+        }
+    }
+
+    public async Task Agregar()
+    {
+        Cobro.CobroDetalle.Add(new CobrosDetalle()
+            {
+                PrestamoId = seleccionado,
+                ValorCobrado = valorCobrado,
+            });
+        seleccionado = 0;
+        valorCobrado = 0;
+    }
+
+    public async Task RemoverDetalle(CobrosDetalle RemoverCobro)
+    {
+        seleccionado = RemoverCobro.PrestamoId;
+        valorCobrado = RemoverCobro.ValorCobrado;
+
+        Cobro.CobroDetalle.Remove(RemoverCobro);
+
+        return;
+    }
+}
