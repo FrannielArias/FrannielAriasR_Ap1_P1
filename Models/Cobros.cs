@@ -18,10 +18,8 @@ namespace FrannielAriasR_Ap1_P1.Models
 
         public int DeudorId { get; set; }
         [ForeignKey("DeudorId")]
-        public Deudores? Deudores { get; set; }
+        public Deudores? Deudores { get; set; }  // Enlace a Deudores
 
-        [ForeignKey("CobroId")]
-        public ICollection<CobrosDetalle> CobroDetalle { get; set; } = new List<CobrosDetalle>();
-
+        public ICollection<CobrosDetalle> CobroDetalle { get; set; } = new List<CobrosDetalle>();  // Colección enlazada
     }
 }
