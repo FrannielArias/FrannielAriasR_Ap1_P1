@@ -1,0 +1,87 @@
+﻿@page "/Cobro/Edit/{CostoId:int}"
+@inject CobrosServices cobroServices
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Create Cobro</PageTitle>
+<EditForm Model="Cobro" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="container">
+        <div class="shadow-lg">
+            @*Header*@
+            <div class="card-header">
+                <h5 class="card-title">Editar cobro</h5>
+            </div>
+            @*body*@
+            <div class="card-body">
+                @*CobroId*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>CobroId</strong></label>
+                    <InputNumber class="form-control" readonly @bind-Value=Cobro.CobroId></InputNumber>
+                </div>
+                @*Fecha*@
+                <div class="col-2 mt-2">
+                    <label class="form-label"><strong>Fecha</strong></label>
+                    <InputDate class="form-control" @bind-Value="Cobro.Fecha"></InputDate>
+                </div>
+                @*Deudor*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>Deudor</strong></label>
+                    <InputSelect class="form-select" @bind-Value=Cobro.DeudorId>
+                        <option value="0" selected disabled>Seleccione un deudor</option>
+                        @foreach (var deudores in ListarDeudores)
+                        {
+                            <option value="@deudores.DeudorId">@deudores.Nombres</option>
+                        }
+                    </InputSelect>
+                </div>
+                @*Monto*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>Monto</strong></label>
+                    <InputNumber class="form-control" @bind-Value=Cobro.Monto></InputNumber>
+                    <ValidationMessage For="(() => Cobro.Monto)" />
+                </div>
+            </div>
+            @*Footer*@
+            <div class="card-footer">
+                @*Volver*@
+                <a href="Cobro/Index" class="btn btn-secondary">
+                    <span class="bi bi-arrow-left mt-3"> Volver</span>
+                </a>
+                @*Guardar*@
+                <button type="submit" class="btn btn-success bi bi-floppy"> Modificar</button>
+            </div>
+        </div>
+        @Mensaje
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int CostoId { get; set; }
+    public Cobros Cobro { get; set; } = new Cobros();
+    public List<Deudores> ListarDeudores { get; set; } = new List<Deudores>();
+    public List<Cobros> ListarCobros { get; set; } = new List<Cobros>();
+    public string Mensaje = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListarDeudores = await cobroServices.ListarDeudores(c => true);
+        Cobro = await cobroServices.Buscar(CostoId);
+    }
+
+    public async Task Guardar()
+    {
+        var Modificar = await cobroServices.Guardar(Cobro);
+
+        if (Modificar)
+        {
+            Mensaje = "Se a modificado correctamente.";
+        }
+        else
+        {
+            Mensaje = "No se pudo modificar";
+        }
+    }
+}
+
