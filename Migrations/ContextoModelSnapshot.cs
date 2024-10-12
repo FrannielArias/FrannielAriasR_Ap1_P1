@@ -58,6 +58,8 @@ namespace FrannielAriasR_Ap1_P1.Migrations
 
                     b.HasIndex("CobroId");
 
+                    b.HasIndex("PrestamoId");
+
                     b.ToTable("CobroDetalle");
                 });
 
@@ -79,34 +81,35 @@ namespace FrannielAriasR_Ap1_P1.Migrations
                         new
                         {
                             DeudorId = 1,
-                            Nombres = "Alma"
+                            Nombres = "Lia"
                         },
                         new
                         {
                             DeudorId = 2,
-                            Nombres = "Jane"
-                        },
-                        new
-                        {
-                            DeudorId = 3,
                             Nombres = "DjMarte"
                         },
                         new
                         {
-                            DeudorId = 4,
+                            DeudorId = 3,
                             Nombres = "Franniel"
+                        },
+                        new
+                        {
+                            DeudorId = 4,
+                            Nombres = "Ronel"
                         });
                 });
 
             modelBuilder.Entity("FrannielAriasR_Ap1_P1.Models.Prestamos", b =>
                 {
                     b.Property<int>("PrestamoId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CobroId")
+                    b.Property<int?>("CobrosCobroId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Concepto")
@@ -121,7 +124,7 @@ namespace FrannielAriasR_Ap1_P1.Migrations
 
                     b.HasKey("PrestamoId");
 
-                    b.HasIndex("CobroId");
+                    b.HasIndex("CobrosCobroId");
 
                     b.HasIndex("DeudorId");
 
@@ -141,30 +144,32 @@ namespace FrannielAriasR_Ap1_P1.Migrations
 
             modelBuilder.Entity("FrannielAriasR_Ap1_P1.Models.CobrosDetalle", b =>
                 {
-                    b.HasOne("FrannielAriasR_Ap1_P1.Models.Cobros", null)
+                    b.HasOne("FrannielAriasR_Ap1_P1.Models.Cobros", "Cobros")
                         .WithMany("CobroDetalle")
                         .HasForeignKey("CobroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("FrannielAriasR_Ap1_P1.Models.Prestamos", "Prestamo")
+                        .WithMany("CobrosDetalle")
+                        .HasForeignKey("PrestamoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cobros");
+
+                    b.Navigation("Prestamo");
                 });
 
             modelBuilder.Entity("FrannielAriasR_Ap1_P1.Models.Prestamos", b =>
                 {
                     b.HasOne("FrannielAriasR_Ap1_P1.Models.Cobros", "Cobros")
                         .WithMany()
-                        .HasForeignKey("CobroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CobrosCobroId");
 
                     b.HasOne("FrannielAriasR_Ap1_P1.Models.Deudores", "Deudores")
                         .WithMany()
                         .HasForeignKey("DeudorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FrannielAriasR_Ap1_P1.Models.CobrosDetalle", null)
-                        .WithMany("Prestamos")
-                        .HasForeignKey("PrestamoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -178,9 +183,9 @@ namespace FrannielAriasR_Ap1_P1.Migrations
                     b.Navigation("CobroDetalle");
                 });
 
-            modelBuilder.Entity("FrannielAriasR_Ap1_P1.Models.CobrosDetalle", b =>
+            modelBuilder.Entity("FrannielAriasR_Ap1_P1.Models.Prestamos", b =>
                 {
-                    b.Navigation("Prestamos");
+                    b.Navigation("CobrosDetalle");
                 });
 #pragma warning restore 612, 618
         }
