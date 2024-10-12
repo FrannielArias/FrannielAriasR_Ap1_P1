@@ -1,5 +1,6 @@
 ﻿@page "/Prestamo/Create"
 @inject PrestamosServices prestamoServices
+@inject CobrosServices cobroServices
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
@@ -10,7 +11,7 @@
         <div class="shadow-lg">
             @*Header*@
             <div class="card-header">
-                <h5 class="card-title">Create de Prestamos</h5>
+                <h5 class="card-title">Prestamo</h5>
             </div>
             @*Body*@
             <div class="card-body">
@@ -18,14 +19,19 @@
                 <div class="col-3 mt-2">
                     <label class="form-label"><strong>PrestamoId</strong></label>
                     <div class="id-input">
-                        <InputNumber class="form-control" @bind-Value=Prestamo.PrestamoId></InputNumber>
-                    </div>
+                        <InputNumber class="form-control" readonly @bind-Value=Prestamo.PrestamoId></InputNumber>
+                    </div>  
                 </div>
                 @*Deudor*@
                 <div class="col-3 mt-2">
                     <label class="form-label"><strong>Deudor</strong></label>
-                    <InputText class="form-control" @bind-Value=Prestamo.Deudor></InputText>
-                    <ValidationMessage For="(() => Prestamo.Deudor)" />
+                    <InputSelect class="form-select" @bind-Value=Prestamo.DeudorId>
+                        <option value="" selected disabled>Seleccione un deudor</option>
+                        @foreach (var deudores in ListarDeudores)
+                        {
+                            <option value="@deudores.DeudorId">@deudores.Nombres</option>
+                        }
+                    </InputSelect>
                 </div>
                 @*Concepto*@
                 <div class="col-3 mt-2">
@@ -37,9 +43,14 @@
                 <div class="col-3 mt-2">
                     <label class="form-label"><strong>Monto</strong></label>
                     <InputNumber class="form-control" @bind-Value=Prestamo.Monto></InputNumber>
-                    <ValidationMessage For="(() => Prestamo.Concepto)" />
+                    <ValidationMessage For="(() => Prestamo.Monto)" />
+                </div>  
+                @*Balance*@
+                <div class="col-3 mt-2">
+                    <label class="form-label"><strong>Balance</strong></label>
+                    <InputNumber class="form-control" @bind-Value=Prestamo.Balance></InputNumber>
+                    <ValidationMessage For="(() => Prestamo.Balance)" />
                 </div>
-
             </div>
             @*footer*@
             <div class="card-footer">
@@ -59,7 +70,13 @@
 
 @code {
     public Prestamos Prestamo { get; set; } = new Prestamos();
+    public List<Deudores> ListarDeudores { get; set; } = new List<Deudores>();
     public string Mensaje { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListarDeudores = await cobroServices.ListarDeudores(c => true);
+    }
 
     public void Volver()
     {
@@ -78,6 +95,5 @@
         {
             Mensaje = "No se pudo crear";
         }
-
     }
 }
