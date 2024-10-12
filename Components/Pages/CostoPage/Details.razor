@@ -1,0 +1,54 @@
+﻿@page "/Cobro/Details/{CobroId:int}"
+@inject CobrosServices cobroService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Eliminar cobro</PageTitle>
+<div class="container">
+    <div class="shadow-lg">
+        @*Header*@
+        <div class="card-header">
+            <h3 class="card-title">Detalle del cobro</h3>
+        </div>
+        @*body*@
+        <div class="card-body">
+            <dl class="row">
+                @*CobroId*@
+                <dt class="col-sm-3">ID:</dt>
+                <dd class="col-sm-9">@Cobro.CobroId</dd>
+                @*Fecha*@
+                <dt class="col-sm-3">Fecha:</dt>
+                <dd class="col-sm-9">@Cobro.Fecha</dd>
+                @*Deudor*@
+                <dt class="col-sm-3">Deudor:</dt>
+                <dd class="col-sm-9">@Cobro.DeudorId</dd>
+                @*Monto*@
+                <dt class="col-sm-3">Monto:</dt>
+                <dd class="col-sm-9">@Cobro?.Monto</dd>
+            </dl>
+        </div>
+        @*Footer*@
+        <div class="card-footer">
+            @*Volver*@
+            <a href="Cobro/Index" class="btn btn-secondary">
+                <span class="bi bi-arrow-left mt-3"> Volver</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int CobroId { get; set; }
+    public Cobros Cobro { get; set; } = new Cobros();
+    public string Mensaje { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cobro = await cobroService.Buscar(CobroId);
+        if (Cobro == null)
+        {
+            Mensaje = "Cobro no encontrado.";
+        }
+    }
+}
