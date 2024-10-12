@@ -12,6 +12,7 @@
         </div>
         @*Body*@
         <div class="card-body">
+            @*Filtro*@
             <div class="row">
                 @*Filtrar por*@
                 <div class="col-3">
@@ -22,6 +23,7 @@
                     <label class="form-label"><strong>Buscar</strong></label>
                 </div>
             </div>
+            @*Buscar*@
             <div class="row">
                 @*Filtro*@
                 <div class="col-3">
@@ -50,10 +52,9 @@
                     </a>
                 </div>
             </div>
-            
             @*Tabla*@
             <table class="table table-bordered text-center mt-4">
-                <thead class="table table-striped">
+                <thead>
                     <tr>
                         <th>PrestamoId</th>
                         <th>Deudor</th>
@@ -65,15 +66,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var prestamo in ListarPrestamos)
+                    @foreach (var prestamo in ListarPrestamos)
                     {
                         <tr>
                             <td>@prestamo.PrestamoId</td>
-                            @* <td>@prestamo.Deudor</td> *@
+                            @* @if (prestamo.Deudores.Nombres != null)
+                            {
+                                <td>@prestamo.Deudores.Nombres</td>
+                            } *@
+                            <td>@prestamo.Deudores.Nombres</td>
                             <td>@prestamo.Concepto</td>
-                            <div class="text-end">
-                                <td>@prestamo.Monto</td>
-                            </div>
+                            <td>@prestamo.Monto</td>
                             @*Observar*@
                             <td>
                                 <a href="Prestamo/Details/@prestamo.PrestamoId"
@@ -107,37 +110,37 @@
     </div>
 </div>
 
-@code {
-    public List<Prestamos> ListarPrestamos { get; set; } = new List<Prestamos>();
-    public string Filtro = string.Empty;
-    public string ValorFiltrado = string.Empty;
+    @code {
+        public List<Prestamos> ListarPrestamos { get; set; } = new List<Prestamos>();
+        public string Filtro = string.Empty;
+        public string ValorFiltrado = string.Empty;
 
-    protected override async Task OnInitializedAsync()
-    {
-        ListarPrestamos = await prestamoServices.Listar(p => true);
-    }
-
-    public async Task Buscar()
-    {
-        if (ValorFiltrado.Trim() != "")
+        protected override async Task OnInitializedAsync()
         {
-            if (Filtro == "ID" && int.TryParse(ValorFiltrado, out int prestamoId))
-                ListarPrestamos = await prestamoServices.Listar(p => p.PrestamoId == prestamoId);
-            // else if (Filtro == "Deudor")
-            //     ListarPrestamos = await prestamoServices.Listar(t => t.Deudor.ToLower().Contains(ValorFiltrado.ToLower()));
-            else if (Filtro == "Concepto")
-                ListarPrestamos = await prestamoServices.Listar(t => t.Concepto.ToLower().Contains(ValorFiltrado.ToLower()));
+            ListarPrestamos = await prestamoServices.Listar(p => true);
         }
-        else
+
+        public async Task Buscar()
+        {
+            if (ValorFiltrado.Trim() != "")
+            {
+                if (Filtro == "ID" && int.TryParse(ValorFiltrado, out int prestamoId))
+                    ListarPrestamos = await prestamoServices.Listar(p => p.PrestamoId == prestamoId);
+                // else if (Filtro == "Deudor")
+                //     ListarPrestamos = await prestamoServices.Listar(t => t.Deudor.ToLower().Contains(ValorFiltrado.ToLower()));
+                else if (Filtro == "Concepto")
+                    ListarPrestamos = await prestamoServices.Listar(t => t.Concepto.ToLower().Contains(ValorFiltrado.ToLower()));
+            }
+            else
+            {
+                ListarPrestamos = await prestamoServices.Listar(t => true);
+            }
+        }
+
+        public async Task Restablecer()
         {
             ListarPrestamos = await prestamoServices.Listar(t => true);
+            Filtro = string.Empty;
+            ValorFiltrado = string.Empty;
         }
-    }
-
-    public async Task Restablecer()
-    {
-        ListarPrestamos = await prestamoServices.Listar(t => true);
-        Filtro = string.Empty;
-        ValorFiltrado = string.Empty;
-    }
 }
