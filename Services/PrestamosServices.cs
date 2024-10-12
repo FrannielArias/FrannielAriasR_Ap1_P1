@@ -58,6 +58,7 @@ public class PrestamosServices(Contexto _contexto)
     {
         return await _contexto.Prestamos
             .Include(p => p.Cobros)
+            .Include(c=>c.Deudores)
             .AsNoTracking()
             .Where(criterio)
             .ToListAsync();
