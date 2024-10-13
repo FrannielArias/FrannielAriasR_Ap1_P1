@@ -1,5 +1,7 @@
 ﻿@page "/Cobro/Create"
 @inject CobrosServices cobroServices
+@inject PrestamosServices prestamoService
+@inject DeudoresServices deudoreServices
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
@@ -19,9 +21,10 @@
                     <label class="form-label"><strong>CobroId</strong></label>
                     <InputNumber class="form-control" readonly @bind-Value=Cobro.CobroId></InputNumber>
                 </div>
-                @*DeudorId*@
+                @*Deudor*@
                 <div class="col-3 mt-2">
-                    <InputSelect class="form-select" @bind-Value=seleccionado>
+                    <label class="form-label"><strong>Deudor</strong></label>
+                    <InputSelect class="form-select" @bind-Value=Cobro.DeudorId>
                         <option value="0" selected disabled>Seleccione un deudor</option>
                         @foreach (var deudores in ListarDeudores)
                         {
@@ -62,7 +65,7 @@
                                 <div class="row">
                                     @*Concepto*@
                                     <div class="col-3 mt-2">
-                                        <InputSelect class="form-select" @bind-Value=seleccionado>
+                                        <InputSelect class="form-select" @bind-Value=ConceptoSeleccionado>
                                             <option value="0" selected disabled>Seleccione un concepto de prestamo</option>
                                             @foreach (var concepto in ListarPrestamos)
                                             {
@@ -92,20 +95,27 @@
                                         <tbody>
                                             @foreach (var concepto in Cobro.CobroDetalle)
                                             {
-                                                @* <tr>
+                                                <tr>
                                                     <td>@concepto.PrestamoId</td>
-                                                    <td>@concepto.Prestamos</td>
+                                                    @if (@concepto.Prestamo.Concepto != null)
+                                                    {
+                                                        <td>@concepto.Prestamo.Concepto</td>
+                                                    }
                                                     <td>@concepto.ValorCobrado</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-danger" @onclick="@(() => RemoverDetalle(concepto))">
-                                                            <i class="oi oi-trash">Eliminar</i>
+                                                        <button type="button" class="btn btn-danger oi oi-trash" @onclick="@(() => RemoverDetalle(concepto))">
+                                                            Eliminar
                                                         </button>
                                                     </td>
-                                                </tr> *@
+                                                </tr>
                                             }
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+                            @*Footer*@
+                            <div class="card-footer">
+                                <p><strong>Cantidad de cobros: </strong>@Cobro.CobroDetalle.Count</p>
                             </div>
                         </div>
                     </div>
@@ -130,19 +140,23 @@
     public CobrosDetalle cobrosDetalle { get; set; } = new CobrosDetalle();
     public List<Deudores> ListarDeudores { get; set; } = new List<Deudores>();
     public List<Prestamos> ListarPrestamos { get; set; } = new List<Prestamos>();
+    public Prestamos Prestamo { get; set; } = new Prestamos();
     public string Mensaje = string.Empty;
-    public int seleccionado { get; set; }
+    public int Seleccionado { get; set; }
+    public int ConceptoSeleccionado { get; set; }
+    public string Utilizado { get; set; } = string.Empty;
     public decimal valorCobrado { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ListarDeudores = await cobroServices.ListarDeudores(c => true);
+        ListarDeudores = await deudoreServices.Listar(c => true);
+        ListarPrestamos = await prestamoService.Listar(p => true);
     }
 
     public async Task Guardar()
     {
         var Crear = await cobroServices.Guardar(Cobro);
-
+        
         if (Crear)
         {
             Mensaje = "Se a creado correctamente.";
@@ -155,18 +169,23 @@
 
     public async Task Agregar()
     {
-        Cobro.CobroDetalle.Add(new CobrosDetalle()
-            {
-                PrestamoId = seleccionado,
-                ValorCobrado = valorCobrado,
-            });
-        seleccionado = 0;
-        valorCobrado = 0;
+        var prestamo = ListarPrestamos.FirstOrDefault(p => p.PrestamoId == ConceptoSeleccionado);
+        if(prestamo != null)
+        {
+            Cobro.CobroDetalle.Add(new CobrosDetalle()
+                {
+                    PrestamoId = ConceptoSeleccionado,
+                    Prestamo = prestamo,
+                    ValorCobrado = valorCobrado,
+                });
+            ConceptoSeleccionado = 0;
+            valorCobrado = 0;
+        }
     }
 
     public async Task RemoverDetalle(CobrosDetalle RemoverCobro)
     {
-        seleccionado = RemoverCobro.PrestamoId;
+        ConceptoSeleccionado = RemoverCobro.PrestamoId;
         valorCobrado = RemoverCobro.ValorCobrado;
 
         Cobro.CobroDetalle.Remove(RemoverCobro);
