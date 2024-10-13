@@ -21,7 +21,8 @@ namespace FrannielAriasR_Ap1_P1.DAL
                 new Deudores() { DeudorId=1, Nombres="Lia"},
                 new Deudores() { DeudorId=2, Nombres="DjMarte"},
                 new Deudores() { DeudorId=3, Nombres="Franniel"},
-                new Deudores() {DeudorId=4, Nombres="Ronel" }
+                new Deudores() {DeudorId=4, Nombres="Ronel" },
+                new Deudores() {DeudorId=5, Nombres="Bryan Smith" },
 
             });
         }
