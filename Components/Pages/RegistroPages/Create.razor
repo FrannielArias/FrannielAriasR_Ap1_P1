@@ -1,6 +1,7 @@
 ﻿@page "/Prestamo/Create"
 @inject PrestamosServices prestamoServices
 @inject CobrosServices cobroServices
+@inject DeudoresServices deudoreService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
@@ -75,7 +76,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListarDeudores = await cobroServices.ListarDeudores(c => true);
+        ListarDeudores = await deudoreService.Listar(c => true);
     }
 
     public void Volver()
