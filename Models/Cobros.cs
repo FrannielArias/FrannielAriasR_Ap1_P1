@@ -16,10 +16,11 @@ namespace FrannielAriasR_Ap1_P1.Models
         [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un cantidad válida.")]
         public decimal Monto { get; set; }
 
+        [ForeignKey("Deudores")]
         public int DeudorId { get; set; }
-        [ForeignKey("DeudorId")]
-        public Deudores? Deudores { get; set; }  // Enlace a Deudores
+        public Deudores? Deudores { get; set; }
 
-        public ICollection<CobrosDetalle> CobroDetalle { get; set; } = new List<CobrosDetalle>();  // Colección enlazada
+        [ForeignKey("CobroId")]
+        public ICollection<CobrosDetalle> CobroDetalle { get; set; } = new List<CobrosDetalle>();  
     }
 }
