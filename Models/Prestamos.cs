@@ -20,16 +20,12 @@ public class Prestamos
     [Range(minimum: 0.1, maximum: 9999999999, ErrorMessage = "Ingrese un número válido.")]
     public decimal Balance { get; set; }
 
-    //public int CobroId { get; set; }
-
-    /*[ForeignKey("CobroId")] */ // Especificamos que CobroId es la clave foránea para Cobros
-    public Cobros? Cobros { get; set; }
-
     public int DeudorId { get; set; }
     [ForeignKey("DeudorId")]
     public Deudores? Deudores { get; set; }
 
-    public ICollection<CobrosDetalle> CobrosDetalle { get; set; } = new List<CobrosDetalle>();
+    //[ForeignKey("PrestamoId")]
+    //public ICollection<CobrosDetalle> CobrosDetalle { get; set; } = new List<CobrosDetalle>();
 }
 
 
