@@ -62,12 +62,4 @@ public class CobrosServices(Contexto _contexto)
             .ToListAsync();
     }
 
-    public async Task<List<Deudores>> ListarDeudores(Expression<Func<Deudores, bool>> criterio)
-    {
-        return await _contexto.Deudores
-            .AsNoTracking()
-            .Where(criterio)
-            .ToListAsync();
-    }
-
 }
