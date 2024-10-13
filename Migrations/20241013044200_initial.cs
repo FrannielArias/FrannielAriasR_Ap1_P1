@@ -56,17 +56,11 @@ namespace FrannielAriasR_Ap1_P1.Migrations
                     Concepto = table.Column<string>(type: "TEXT", nullable: false),
                     Monto = table.Column<decimal>(type: "TEXT", nullable: false),
                     Balance = table.Column<decimal>(type: "TEXT", nullable: false),
-                    CobrosCobroId = table.Column<int>(type: "INTEGER", nullable: true),
                     DeudorId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Prestamos", x => x.PrestamoId);
-                    table.ForeignKey(
-                        name: "FK_Prestamos_Cobro_CobrosCobroId",
-                        column: x => x.CobrosCobroId,
-                        principalTable: "Cobro",
-                        principalColumn: "CobroId");
                     table.ForeignKey(
                         name: "FK_Prestamos_Deudores_DeudorId",
                         column: x => x.DeudorId,
@@ -110,7 +104,8 @@ namespace FrannielAriasR_Ap1_P1.Migrations
                     { 1, "Lia" },
                     { 2, "DjMarte" },
                     { 3, "Franniel" },
-                    { 4, "Ronel" }
+                    { 4, "Ronel" },
+                    { 5, "Bryan Smith" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -129,11 +124,6 @@ namespace FrannielAriasR_Ap1_P1.Migrations
                 column: "PrestamoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Prestamos_CobrosCobroId",
-                table: "Prestamos",
-                column: "CobrosCobroId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Prestamos_DeudorId",
                 table: "Prestamos",
                 column: "DeudorId");
@@ -146,10 +136,10 @@ namespace FrannielAriasR_Ap1_P1.Migrations
                 name: "CobroDetalle");
 
             migrationBuilder.DropTable(
-                name: "Prestamos");
+                name: "Cobro");
 
             migrationBuilder.DropTable(
-                name: "Cobro");
+                name: "Prestamos");
 
             migrationBuilder.DropTable(
                 name: "Deudores");

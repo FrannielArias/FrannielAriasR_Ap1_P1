@@ -97,6 +97,11 @@ namespace FrannielAriasR_Ap1_P1.Migrations
                         {
                             DeudorId = 4,
                             Nombres = "Ronel"
+                        },
+                        new
+                        {
+                            DeudorId = 5,
+                            Nombres = "Bryan Smith"
                         });
                 });
 
@@ -109,9 +114,6 @@ namespace FrannielAriasR_Ap1_P1.Migrations
                     b.Property<decimal>("Balance")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CobrosCobroId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Concepto")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -123,8 +125,6 @@ namespace FrannielAriasR_Ap1_P1.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("PrestamoId");
-
-                    b.HasIndex("CobrosCobroId");
 
                     b.HasIndex("DeudorId");
 
@@ -151,7 +151,7 @@ namespace FrannielAriasR_Ap1_P1.Migrations
                         .IsRequired();
 
                     b.HasOne("FrannielAriasR_Ap1_P1.Models.Prestamos", "Prestamo")
-                        .WithMany("CobrosDetalle")
+                        .WithMany()
                         .HasForeignKey("PrestamoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -163,17 +163,11 @@ namespace FrannielAriasR_Ap1_P1.Migrations
 
             modelBuilder.Entity("FrannielAriasR_Ap1_P1.Models.Prestamos", b =>
                 {
-                    b.HasOne("FrannielAriasR_Ap1_P1.Models.Cobros", "Cobros")
-                        .WithMany()
-                        .HasForeignKey("CobrosCobroId");
-
                     b.HasOne("FrannielAriasR_Ap1_P1.Models.Deudores", "Deudores")
                         .WithMany()
                         .HasForeignKey("DeudorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Cobros");
 
                     b.Navigation("Deudores");
                 });
@@ -181,11 +175,6 @@ namespace FrannielAriasR_Ap1_P1.Migrations
             modelBuilder.Entity("FrannielAriasR_Ap1_P1.Models.Cobros", b =>
                 {
                     b.Navigation("CobroDetalle");
-                });
-
-            modelBuilder.Entity("FrannielAriasR_Ap1_P1.Models.Prestamos", b =>
-                {
-                    b.Navigation("CobrosDetalle");
                 });
 #pragma warning restore 612, 618
         }
