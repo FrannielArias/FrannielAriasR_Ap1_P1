@@ -10,9 +10,11 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var ConStr = builder.Configuration.GetConnectionString("ConStr");
-builder.Services.AddDbContext<Contexto>(r => r.UseSqlite(ConStr));
+builder.Services.AddDbContextFactory<Contexto>(r => r.UseSqlite(ConStr));
 
 builder.Services.AddScoped<PrestamosServices>();
+builder.Services.AddScoped<CobrosServices>();
+builder.Services.AddScoped<DeudoresServices>();
 
 var app = builder.Build();
 

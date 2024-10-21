@@ -1,0 +1,79 @@
+﻿@page "/Cobro/Index"
+@inject CobrosServices cobroServices
+@inject NavigationManager navigationManager
+
+<PageTitle>Index Cobros</PageTitle>
+<div class="container">
+    <div class="shadow-lg">
+        @*Header*@
+        <div class="card-header">
+            <h3 class="card-title">Registro de costo</h3>
+        </div>
+        @*Body*@
+        <div class="card-body">
+            @*Crear*@
+            <div class="col-auto text-end">
+                <a href="Cobro/Create" class="btn btn-primary">
+                    <span class="bi bi-plus-square mt-3"></span> Crear
+                </a>
+            </div>
+            @*Tabla*@
+            <table class="table table-bordered text-center mt-4">
+                <thead>
+                    <tr>
+                        <th>CobroId</th>
+                        <th>Fecha</th>
+                        <th>Deudor</th>
+                        <th>Monto</th>
+                        <th>Observar</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var costo in ListarCobros)
+                    {
+                        <tr>
+                            <td>@costo.CobroId</td>
+                            <td>@costo.Fecha.ToShortDateString()</td>
+                            @* <td>@costo.Deudores.Nombres</td> *@
+                            <td>@costo.Monto</td>
+                            @*Observar*@
+                            <td>
+                                <a href="Cobro/Details/@costo.CobroId" class="btn btn-outline-primary">
+                                    <span class="btn btn bi bi-eye"></span>
+                                </a>
+                            </td>
+                            @*Editar*@
+                            <td>
+                                <a href="Cobro/Edit/@costo.CobroId" class="btn btn-outline-warning">
+                                    <span class="btn bi bi-pencil"></span>
+                                </a>
+                            </td>
+                            @*Eliminar*@
+                            <td>
+                                <a href="Cobro/Delete/@costo.CobroId" class="btn btn-outline-danger">
+                                    <span class="btn bi bi-trash"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @*Footer*@
+        <div class="card-footer">
+            <p><strong>Cantidad de cobros: </strong>@ListarCobros.Count</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    public Cobros cobro { get; set; } = new Cobros();
+    public List<Cobros> ListarCobros { get; set; } = new List<Cobros>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListarCobros = await cobroServices.Listar(c => true);
+    }
+}

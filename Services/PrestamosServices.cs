@@ -57,6 +57,8 @@ public class PrestamosServices(Contexto _contexto)
     public async Task<List<Prestamos>> Listar(Expression<Func<Prestamos, bool>> criterio)
     {
         return await _contexto.Prestamos
+            //.Include(p => p.Cobros)
+            .Include(c=>c.Deudores)
             .AsNoTracking()
             .Where(criterio)
             .ToListAsync();
